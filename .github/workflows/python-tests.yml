@@ -21,10 +21,16 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: x64
 
-      - name: Install
+      - name: Install dependencies and pytest
         run: |
           pip install -e .
-          pip install -r requirements.txt          
+          pip install -r requirements.txt
+
+      - name: Set Python Path
+        run: |
+          export PYTHONPATH="${PYTHONPATH}:$(pwd)"  # Linux/macOS
+          # For Windows, use the following line instead:
+          # $env:PYTHONPATH += ";${env:GITHUB_WORKSPACE}"
 
       - name: Run tests
         run: pytest
