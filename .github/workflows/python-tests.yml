@@ -28,9 +28,9 @@ jobs:
 
       - name: Set Python Path
         run: |
-          export PYTHONPATH="${PYTHONPATH}:$(pwd)"  # Linux/macOS
+          # export PYTHONPATH="${PYTHONPATH}:$(pwd)"  # Linux/macOS
           # For Windows, use the following line instead:
-          # $env:PYTHONPATH += ";${env:GITHUB_WORKSPACE}"
+          $env:PYTHONPATH += ";${env:GITHUB_WORKSPACE}"
 
       - name: Run tests
         run: pytest
