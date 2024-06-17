@@ -132,23 +132,24 @@ class AudioUtil():
 
     return aug_spec
 
-#--- 
-# Preprocessing function
-def preprocess_file(audio_file,sr = 44100,duration = 4000,shift_pct = .4):
-    aud = AudioUtil.open(audio_file)
-    # Some sounds have a higher sample rate, or fewer channels compared to the
-    # majority. So make all sounds have the same number of channels and same 
-    # sample rate. Unless the sample rate is the same, the pad_trunc will still
-    # result in arrays of different lengths, even though the sound duration is
-    # the same.
-    reaud = AudioUtil.resample(aud,sr)
-    rechan = AudioUtil.rechannel(reaud, 2)
-    dur_aud = AudioUtil.pad_trunc(rechan,duration)
-    shift_aud = AudioUtil.time_shift(dur_aud,shift_pct)
-    sgram = AudioUtil.spectro_gram(shift_aud, n_mels=64, n_fft=1024, hop_len=None)
-    aug_sgram = AudioUtil.spectro_augment(sgram, max_mask_pct=0.1, n_freq_masks=2, n_time_masks=2)
-    return aug_sgram
-#---
+  #--- 
+  # Preprocessing function
+  @staticmethod
+  def preprocess_file(audio_file,sr = 44100,duration = 4000,shift_pct = .4):
+      aud = AudioUtil.open(audio_file)
+      # Some sounds have a higher sample rate, or fewer channels compared to the
+      # majority. So make all sounds have the same number of channels and same 
+      # sample rate. Unless the sample rate is the same, the pad_trunc will still
+      # result in arrays of different lengths, even though the sound duration is
+      # the same.
+      reaud = AudioUtil.resample(aud,sr)
+      rechan = AudioUtil.rechannel(reaud, 2)
+      dur_aud = AudioUtil.pad_trunc(rechan,duration)
+      shift_aud = AudioUtil.time_shift(dur_aud,shift_pct)
+      sgram = AudioUtil.spectro_gram(shift_aud, n_mels=64, n_fft=1024, hop_len=None)
+      aug_sgram = AudioUtil.spectro_augment(sgram, max_mask_pct=0.1, n_freq_masks=2, n_time_masks=2)
+      return aug_sgram
+  #---
 
 # ----------------------------
 # Sound Dataset
