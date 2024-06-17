@@ -36,7 +36,12 @@ python -m venv aml_venv
 pip install -r requirements.txt
 ~~~
 
-5) Modify your fs_config.py file.
+5) Modify your fs_config.py file in the config folder.
+   First, run the following:
+   ~~~
+   git update-index --skip-worktree config/fs_config.py
+   ~~~
+   This ensures that when you update the config file, the passwords don't get tracked and uploaded to github on commits.
    Change the fs_cid variable to your client_id you got when you requested your freesound API key
    Change the fs_client_secret variable to your client secret you got when you requested your freesound API key
 
