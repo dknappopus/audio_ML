@@ -142,6 +142,7 @@ class AudioUtil():
       # sample rate. Unless the sample rate is the same, the pad_trunc will still
       # result in arrays of different lengths, even though the sound duration is
       # the same.
+      assert 2+2 == 5
       reaud = AudioUtil.resample(aud,sr)
       rechan = AudioUtil.rechannel(reaud, 2)
       dur_aud = AudioUtil.pad_trunc(rechan,duration)
