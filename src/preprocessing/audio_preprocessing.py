@@ -14,7 +14,7 @@ import pandas as pd
 # ------------------------------------------------------------------
 
 
-def check_dict(py_dict, dict_key):
+def check_dict(py_dict: dict, dict_key: str) -> str:
     """
     This function checks if a dictionary contains a key.
     if it contains the key, the value is returned,
@@ -201,6 +201,54 @@ def create_music_set(dir_list: list[str]) -> pd.DataFrame:
     music_fltrd = [i for i in music_list if i is not None]
     music_df = pd.DataFrame(music_fltrd)
     return music_df
+
+
+def clean_music_df(music_file_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Cleans music dataframe by removing records where target is missing
+
+    Args:
+        music_file_df (pd.DataFrame): initial df containing file info
+
+    Returns:
+        music_df_clean (pd.DataFrame): processed df with no blank
+        instrument_names
+
+    Raises:
+        AssertionError: raises error if returned dataframe is empty
+    """
+    missing_recs = music_file_df.loc[music_file_df['instrument_name'] == '']
+    n_missing = missing_recs.shape[0]
+    pct_missing = round(10*n_missing/music_file_df.shape[0], 2)
+    print(f"""Records missing target variable: {n_missing}.
+          Removing  {pct_missing}% of records from our data""")
+    music_df_clean = music_file_df.loc[music_file_df['instrument_name'] != '']
+    return music_df_clean
+
+
+def save_music_df(music_df_processed: pd.DataFrame, output_dir: str) -> None:
+    """
+    Outputs the music processed df containing music info
+    Args:
+        music_df_processed (pd.DataFrame): the dataframe to be saved out
+    Returns:
+        None, logs the completion
+    Raises:
+        ValueError if dataframe is empty
+        OSError if directory doesnt exist
+    """
+    # ensure dataframe is not empty
+    if music_df_processed.empty:
+        raise ValueError("DataFrame contains no records!")
+    # ensure directory exists
+    if not os.path.isdir(os.path.dirname(output_dir)):
+        raise OSError(f"The path {output_dir} is not a valid directory.")
+    # create file name
+    filename = 'music_info_df.pkl'
+    filepath = os.path.join(output_dir, filename)
+    # Save the DataFrame to a pickle file
+    music_df_processed.to_pickle(filepath)
+    print('saved dataframe')
 # ------------------------------------------------------------------
 
 
@@ -229,5 +277,7 @@ if __name__ == "__main__":
         for directory in dirs:
             fs_dirs.append(os.path.join(root, directory))
     print(len(fs_dirs))
-    music_file_df = create_music_set(fs_dirs)
-    print(music_file_df.head())
+    MUSIC_FILE_DF = create_music_set(fs_dirs)
+    MUSIC_FILE_DF_CLEAN = clean_music_df(MUSIC_FILE_DF)
+    save_music_df(MUSIC_FILE_DF_CLEAN, './data/interim')
+    print(MUSIC_FILE_DF_CLEAN.head())
