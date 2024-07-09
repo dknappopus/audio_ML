@@ -6,9 +6,27 @@ This script creates the dataframe containing music file metadata.
 # imports
 # ------------------------------------------------------------------
 import os
+import logging
 import glob
 import pickle
 import pandas as pd
+# ------------------------------------------------------------------
+# logging
+# ------------------------------------------------------------------
+pp_logger = logging.getLogger(__name__)
+pp_logger.setLevel(logging.DEBUG)
+# set formatting
+pp_formatter = logging.Formatter('time:%(asctime)s,name:,%(name)s,levelname:%(levelname)s,message:%(message)s')
+# set up file handler
+pp_file_handler = logging.FileHandler('./project_logs/audio_preprocessing.log')
+pp_file_handler.setLevel(logging.DEBUG)
+pp_file_handler.setFormatter(pp_formatter)
+# set up stream handler
+pp_stream_handler = logging.StreamHandler()
+pp_stream_handler.setFormatter(pp_formatter)
+# add handlers
+pp_logger.addHandler(pp_file_handler)
+pp_logger.addHandler(pp_stream_handler)
 # ------------------------------------------------------------------
 # functions
 # ------------------------------------------------------------------
@@ -148,10 +166,10 @@ def create_music_record(dir_path: str, instrument_list: list) -> dict:
     metadata_file = os.path.join(dir_path, 'sound_metadata.pkl')
     has_metadata = check_metadata(metadata_file)
     if has_wav_files is False:
-        print('No wav files found')
+        pp_logger.warning(f'No wav files found in {dir_path}')
         return None
     if has_metadata is False:
-        print('No metadata file found')
+        pp_logger.warning(f'No metadata file found in {dir_path}')
         return None
     wav_file = get_wav_files(dir_path)
     with open(metadata_file, 'rb') as file:
@@ -167,7 +185,7 @@ def create_music_record(dir_path: str, instrument_list: list) -> dict:
             # default to blank and investigate later
             sound_instr = ''
     except IndexError as e:
-        print(e)
+        pp_logger.warning(f'no instrument parsed from {wav_file}')
         sound_instr = ''
     music_record = {"relative_path": wav_file,
                     "channels": check_dict(sound_metadata, "channels"),
@@ -220,7 +238,7 @@ def clean_music_df(music_file_df: pd.DataFrame) -> pd.DataFrame:
     missing_recs = music_file_df.loc[music_file_df['instrument_name'] == '']
     n_missing = missing_recs.shape[0]
     pct_missing = round(10*n_missing/music_file_df.shape[0], 2)
-    print(f"""Records missing target variable: {n_missing}.
+    pp_logger.info(f"""Records missing target variable: {n_missing}.
           Removing  {pct_missing}% of records from our data""")
     music_df_clean = music_file_df.loc[music_file_df['instrument_name'] != '']
     return music_df_clean
@@ -248,7 +266,7 @@ def save_music_df(music_df_processed: pd.DataFrame, output_dir: str) -> None:
     filepath = os.path.join(output_dir, filename)
     # Save the DataFrame to a pickle file
     music_df_processed.to_pickle(filepath)
-    print('saved dataframe')
+    pp_logger.info('successfully saved music dataframe')
 # ------------------------------------------------------------------
 
 
@@ -276,8 +294,6 @@ if __name__ == "__main__":
     for root, dirs, files in os.walk("./freesound"):
         for directory in dirs:
             fs_dirs.append(os.path.join(root, directory))
-    print(len(fs_dirs))
     MUSIC_FILE_DF = create_music_set(fs_dirs)
     MUSIC_FILE_DF_CLEAN = clean_music_df(MUSIC_FILE_DF)
     save_music_df(MUSIC_FILE_DF_CLEAN, './data/interim')
-    print(MUSIC_FILE_DF_CLEAN.head())
