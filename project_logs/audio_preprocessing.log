@@ -2,3 +2,12 @@ time:2024-07-09 16:40:00,703,name:,__main__,levelname:WARNING,message:No wav fil
 time:2024-07-09 16:40:02,514,name:,__main__,levelname:INFO,message:Records missing target variable: 1.
           Removing  0.0% of records from our data
 time:2024-07-09 16:40:02,517,name:,__main__,levelname:INFO,message:successfully saved music dataframe
+time:2024-07-10 10:23:14,777,name:,__main__,levelname:WARNING,message:No wav files found in ./freesound\247146
+time:2024-07-10 10:23:49,780,name:,__main__,levelname:INFO,message:Records missing target variable: 1. Removing 0.01% of records from our data
+time:2024-07-10 10:23:49,795,name:,__main__,levelname:INFO,message:Successfully saved music dataframe
+time:2024-07-10 10:31:13,198,name:,__main__,levelname:WARNING,message:No wav files found in ./freesound\247146
+time:2024-07-10 10:31:15,859,name:,__main__,levelname:INFO,message:Records missing target variable: 1. Removing 0.01 of records from our data
+time:2024-07-10 10:31:15,878,name:,__main__,levelname:INFO,message:Successfully saved music dataframe
+time:2024-07-10 10:31:45,487,name:,__main__,levelname:WARNING,message:No wav files found in ./freesound\247146
+time:2024-07-10 10:31:48,053,name:,__main__,levelname:INFO,message:Records missing target variable: 1. Removing 0.01 percent of records from our data
+time:2024-07-10 10:31:48,053,name:,__main__,levelname:INFO,message:Successfully saved music dataframe
